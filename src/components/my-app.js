@@ -12,6 +12,7 @@ class myApp extends HTMLElement {
         this.attachShadow({ mode: 'open' });
 
         this.render();
+
     }
     render() {
         this.shadowRoot.innerHTML = this.getTemplate();
@@ -26,7 +27,7 @@ class myApp extends HTMLElement {
                     </div>
                     <div class="toggle-container">
                         <input type="checkbox" />
-                        <span>Dark Mode</span>
+                        <span class="toggle-title">Dark Mode</span>
                     </div>
                 </div>
             </header>
@@ -121,13 +122,25 @@ class myApp extends HTMLElement {
             <style>
                 :host {
                     display: block;
-                    width: 100%;
-                    height: 100%;
+                    width: 100vw;
+                    height: 100vh;
                     --facebook: hsl(195, 100%, 50%);
                     --twitter: hsl(203, 89%, 53%);
                     --instagram: hsl(329, 70%, 58%);
                     --youtube: hsl(348, 97%, 39%);
                     --font-color: hsl(228, 12%, 44%);
+                }
+                :host([dark]) header {
+                    background-color: hsl(232, 19%, 15%);
+                }
+                :host([dark]) {
+                    background: hsl(230, 17%, 14%);
+                    color: hsl(0, 0%, 100%);
+                }
+                :host([dark]) gv-component, :host([dark]) ov-component {
+                    background: hsl(228, 28%, 20%);
+                    color: hsl(228, 34%, 66%);
+                    --nums-color: hsl(0, 0%, 100%);
                 }
                 header {
                     width: 100%;
@@ -153,9 +166,36 @@ class myApp extends HTMLElement {
                 header .toggle-container input {
                     float: right;
                 }
+                header .toggle-container input[type="checkbox"] {
+                    position: relative;
+                    width: 80px;
+                    height: 40px;
+                    -webkit-appearance: none; 
+                    background: linear-gradient(45deg, hsl(210, 78%, 56%), hsl(146, 68%, 55%));
+                    border-radius: 20px;
+                    outline: none;
+                    box-shadow: inset 0 0 5px rgba(0,0,0,.2);
+                }
+                header .toggle-container input[type="checkbox"]:before {
+                    content: '';
+                    position: absolute;
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 20px;
+                    background: #f4f7ff;
+                    top: 2px;
+                    right: 2px;
+                    transition: .5s;
+                    box-shadow: 0 0 5px rgba(0,0,0,.2);
+                }
+                header .toggle-container input:checked[type="checkbox"]:before {
+                    right: 43px;
+                    background: hsl(232, 19%, 15%);
+                }
                 header .toggle-container span {
                     float: right;
                     margin-right: 15px;
+                    margin-top: 13px;
                 }
                 header div p {
                     color: var(--font-color);
@@ -218,6 +258,29 @@ class myApp extends HTMLElement {
                 }
              </style>
         `;
+    }
+    handleClick(e) {
+        this.dispatchEvent( new CustomEvent('toggle-click', {
+            detail: {
+                data: "dark"
+            },
+            bubbles: true,
+        }))
+    }
+    connectedCallback() {
+        this.toggle = false;
+        const toggle = this.shadowRoot.querySelector('input[type="checkbox"]');
+        const toggleTitle = this.shadowRoot.querySelector('.toggle-title');
+        toggle.addEventListener('click', (e) => {
+            if(this.toggle === false) {
+                toggleTitle.textContent = "Light Mode";
+                this.toggle = true;
+            } else {
+                toggleTitle.textContent = "Dark Mode";
+                this.toggle = false;
+            }
+            this.handleClick(e);
+        })
     }
 }
 

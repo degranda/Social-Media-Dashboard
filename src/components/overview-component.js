@@ -75,6 +75,7 @@ class overviewComponent extends HTMLElement {
                 section .update-section .nums {
                     font-size: 25px;
                     font-weight: 700;
+                    color: var(--nums-color, black)
                 }
                 section .update-section img {
                     width: 10px;

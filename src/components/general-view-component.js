@@ -83,7 +83,7 @@ class generalViewComponent extends HTMLElement {
                 .followers-section h2 {
                     font-size: 45px;
                     margin: 25px 0 0 0;
-                    color: black;
+                    color: var(--nums-color, black);
                 }
                 .followers-section span {
                     font-weight: lighter;
